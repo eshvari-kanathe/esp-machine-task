@@ -18,10 +18,10 @@ export default function Todo() {
     }
   };
 
-  const startEdit = (todo) => {
-    setEditIndex(todo.index);
-    setEditText(todo.title);
-  };
+const startEdit = (todo, index) => {
+  setEditIndex(index);
+  setEditText(todo.title);
+};
 
   const saveEdit = () => {
     if (editText.trim()) {
@@ -44,47 +44,45 @@ return (
     </div>
 
     <ul className="todo-list">
-      {todos.map((todo,index) => (
-        <li key={index} className="todo-item">
+    {todos.map((todo, index) => (
+  <li key={index} className="todo-item">
+    {editIndex === index ? (
+      <div className="todo-row">
+        <input
+          value={editText}
+          onChange={(e) => setEditText(e.target.value)}
+        />
+        <button onClick={saveEdit}>Save</button>
+      </div>
+    ) : (
+      <>
+        <div className="todo-row">
+          <span className={`todo-title ${todo.completed ? "completed" : ""}`}>
+            {todo.title}
+          </span>
 
-          {editIndex === todo.index ? (
-            <div className="todo-row">
-              <input
-                value={editText}
-                onChange={e => setEditText(e.target.value)}
-              />
-              <button onClick={saveEdit}>Save</button>
-            </div>
-          ) : (
-            <>
-              <div className="todo-row">
-                <span className={`todo-title ${todo.completed ? "completed" : ""}`}>
-                  {todo.title}
-                </span>
+          <span className="status">
+            {todo.completed ? "Completed" : "Pending"}
+          </span>
+        </div>
 
-                <span className="status">
-                  {todo.completed ? "Completed" : "Pending"}
-                </span>
-              </div>
+        <div className="actions">
+          <button onClick={() => dispatch(toggleTodo(index))}>
+            Toggle
+          </button>
 
-              <div className="actions">
-                <button onClick={() => dispatch(toggleTodo(todo.id))}>
-                  Toggle
-                </button>
+          <button onClick={() => startEdit(todo, index)}>
+            Edit
+          </button>
 
-                <button onClick={() => startEdit(todo)}>
-                  Edit
-                </button>
-
-                <button onClick={() => dispatch(deleteTodo(todo.index))}>
-                  Delete
-                </button>
-              </div>
-            </>
-          )}
-
-        </li>
-      ))}
+          <button onClick={() => dispatch(deleteTodo(index))}>
+            Delete
+          </button>
+        </div>
+      </>
+    )}
+  </li>
+))}
     </ul>
   </div>
 );

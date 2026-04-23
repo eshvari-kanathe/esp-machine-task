@@ -9,35 +9,28 @@ const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    addTodo: (state, action) => {
+    addTodo: function (state, action) {
       state.items.push({
         title: action.payload,
         completed: false
       });
-      toast.success("Added Task")
+      toast.success("Added Task");
     },
 
-    toggleTodo: (state, action) => {
-      const todo = state.items.find(item => item.index === action.payload);
-
-      if (todo) {
-        todo.completed = !todo.completed;
-      }
+    toggleTodo: function (state, action) {
+      const index = action.payload;
+      state.items[index].completed = !state.items[index].completed;
     },
 
-    editTodo: (state, action) => {
+    editTodo: function (state, action) {
       const { index, newTitle } = action.payload;
-      const todo = state.items.find(item => item.index === index);
-      if (todo) {
-        todo.title = newTitle;
-      }
-      toast.info("Edit Task Successfully")
+      state.items[index].title = newTitle;
+      toast.info("Edit Task Successfully");
     },
 
-    deleteTodo: (state, action) => {
+    deleteTodo: function (state, action) {
       state.items.splice(action.payload, 1);
-       // console.log("Delete",index)
-
+      toast.error("Deleted Task");
     }
   }
 });
